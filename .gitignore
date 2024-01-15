@@ -1,2 +1,2 @@
-#Ignore the node_modules
-node_module
+# matches any files and directories with the name test
+/Node.js-Backend/node_module
