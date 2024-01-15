@@ -117,6 +117,14 @@
 
 <section class="sec_include">
   <div class="container">
+    <p>create session</p>
+    <form action="/sessions" method="POST">
+      <label for="title">title</label>
+      <input type="text" name="title">
+      <label for="description">description</label>
+      <textarea name="description"></textarea>
+      <button type="submit">submit</button>
+    </form>
 
     <%sessions.map((session, index)=>{%>
       <div class="col-xs-12 col-sm-4 col-md-4 adj_text">
@@ -126,7 +134,7 @@
           <br>
           <div class="read-more-btn">
             
-          <a href="/sessions/<%=index%>" class="btn-oval">Learn More</a>
+          <a href="/sessions/<%=session._id%>" class="btn-oval">Learn More</a>
           </div>
       </div>
     <%})%>
