@@ -76,32 +76,46 @@ sessionsRouter.route('/:id').get((req, res) => {
 });
 
 //update session
-sessionsRouter.route('/edit/:id').put((req, res) => {
-  const id = req.params.id;
+
+// sessionsRouter.get('/edit',(req,res)=>{
+//   res.render('sessionEdit');
+// })
+sessionsRouter.route('/edit/:id').put(async (req, res) => {
+  const id = parseInt(req.params.id);
   const url =
     'mongodb+srv://AdminEhb:Password@backendproject.6ex1nk5.mongodb.net/?retryWrites=true&w=majority';
   const dbName = 'BackendProject';
 
-  (async function mongo() {
-    let client;
-    try {
-      client = await MongoClient.connect(url);
-      debug('Connected to the mongo DB');
+  let client;
 
-      const db = client.db(dbName);
+  try {
+    client = await MongoClient.connect(url);
+    debug('Connected to the mongo DB');
 
-      const session = await db.collection('sessions').findOne({_id: new ObjectId(id)});
-      const speaker= await speakerService.getSpeakerById(session.speakers[0].id);
+    const db = client.db(dbName);
 
-      session.speaker=speaker.data;
+    const session = await db.collection('sessions').findOne({ _id: new ObjectId(id) });
+    const speaker = await speakerService.getSpeakerById(session.speakers[0].id);
 
-      res.render('session',{session});
-    } catch (error) {
-      debug(error.stack);
+    // Update the session based on its _id
+    await db.collection('sessions').updateOne(
+      { _id: new ObjectId(id) }, // Filter criteria
+      { $set: { speaker: speaker.data } } // Update operation
+    );
+
+    // Optionally, you can fetch the updated session after the update
+    const updatedSession = await db.collection('sessions').findOne({ _id: new ObjectId(id) });
+
+    res.render('session', { session: updatedSession });
+  } catch (error) {
+    debug(error.stack);
+  } finally {
+    if (client) {
+      client.close();
     }
-    client.close();
-  })();
+  }
 });
+
 
 //show sessions
 sessionsRouter.route('/').get((req, res) => {

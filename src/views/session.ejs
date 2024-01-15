@@ -14,5 +14,14 @@
         <button type="submit">delete</button>
         <input type="hidden" name="_method" value="DELETE">
     </form>
+
+    <form action="/sessions/edit/<%=session._id%>" method="POST">
+        <label for="title">title</label>
+        <input type="text" name="title" value="<%=session.title%>">
+        <label for="description">description</label> <br>
+        <textarea rows="30" cols="30" name="description"><%=session.description%></textarea><br>
+        <button type="submit">Edit</button>
+        <input type="hidden" name="_method" value="PUT">
+      </form>
 </body>
 </html>
